@@ -1,0 +1,38 @@
+name: Newman API Tests
+
+on:
+  schedule:
+    # Segunda a sexta às 20:45 (horário UTC — veja observação abaixo)
+    - cron: "53 23 * * 1-5"
+  workflow_dispatch: # permite rodar manualmente também
+
+jobs:
+  run-api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: 🔧 Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📦 Instalar Newman e Reporter
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      - name: 🚀 Executar testes com Newman
+        run: |
+          newman run "TESTE_NEWMAN.postman_collection.json" \
+          -e "ENV_SERVER_REST_CT.postman_environment.json" \
+          -r "cli,htmlextra" 
+          --reporter-htmlextra-export "relatorio.html"
+
+      - name: 📤 Fazer upload do relatório HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-newman
+          path: newman-report.html
