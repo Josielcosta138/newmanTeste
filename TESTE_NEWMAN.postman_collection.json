@@ -1,0 +1,475 @@
+{
+	"info": {
+		"_postman_id": "3b0e7820-4c89-4143-b434-f13795502435",
+		"name": "TESTE_NEWMAN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20554107",
+		"_collection_link": "https://solar-robot-12038.postman.co/workspace/Teste-curso-Postma-~2242ec19-4e85-4f4a-98f8-ba85ec73c685/collection/20554107-3b0e7820-4c89-4143-b434-f13795502435?action=share&source=collection_link&creator=20554107"
+	},
+	"item": [
+		{
+			"name": "CT 1 - SUCESSO - CRUD Copy",
+			"item": [
+				{
+					"name": "CADASTRAR_USUARIO - SUCESSO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validar status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});    \r",
+									"\r",
+									"pm.test(\"Validar menssagem response.\", function () {\r",
+									"    pm.expect(response.message).to.be.a(\"string\")\r",
+									"    pm.expect(response.message).to.equal(\"Cadastro realizado com sucesso\")\r",
+									"    pm.expect(response._id).to.be.a(\"string\")\r",
+									"    pm.environment.set(\"usuario_id\", response._id);\r",
+									"});\r",
+									"\r",
+									"console.log(\"ID usado na requisição:\", pm.environment.get(\"usuario_id\"));\r",
+									"\r",
+									"   "
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera um nome aleatório\r",
+									"const nomes = [\"Lucas\", \"Mariana\", \"Thiago\", \"Camila\"];\r",
+									"const sobrenomes = [\"Santos\", \"Rocha\", \"Lima\", \"Costa\"];\r",
+									"\r",
+									"const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)] + \" \" +\r",
+									"                      sobrenomes[Math.floor(Math.random() * sobrenomes.length)];\r",
+									"\r",
+									"// Gera email aleatório\r",
+									"const emailAleatorio = `teste${Math.floor(Math.random() * 10000)}@exemplo.com.br`;\r",
+									"\r",
+									"// Gera senha aleatória simples\r",
+									"const senhaAleatoria = `Senha${Math.floor(Math.random() * 10000)}!`;\r",
+									"\r",
+									"// Salva em variáveis de environment ou collection\r",
+									"pm.environment.set(\"nome_aleatorio\", nomeAleatorio);\r",
+									"pm.environment.set(\"email_aleatorio\", emailAleatorio);\r",
+									"pm.environment.set(\"senha_aleatoria\", senhaAleatoria);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nome_aleatorio}}\",\r\n  \"email\": \"{{email_aleatorio}}\",\r\n  \"password\": \"{{senha_aleatoria}}\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://serverest.dev/usuarios",
+							"protocol": "https",
+							"host": [
+								"serverest",
+								"dev"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RECUPERAR_USUARIO_ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validar Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var campoResponse = [\"nome\", \"email\", \"password\", \"administrador\"];\r",
+									"\r",
+									"pm.test(\"Validar campos response - Sucesso.\", function() {\r",
+									"    campoResponse.forEach(campos => {\r",
+									"        var valores = response[campos]; // Pegar valor do objeto retornado pela API\r",
+									"\r",
+									"        pm.expect(valores, \"Verificar se o campo \" + campos + \" existe\").to.not.be.undefined;\r",
+									"        pm.expect(valores, \"Verificar se campo não esta nulo \" + campos).to.not.null;\r",
+									"        pm.expect(valores, \"Varificar se campo não é uma string \" + campos).to.not.equal(\"\");\r",
+									"    });\r",
+									"    pm.expect(response._id).to.equal(pm.environment.get(\"usuario_id\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "_id",
+								"value": "{{usuario_id}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://serverest.dev/usuarios/{{usuario_id}}",
+							"protocol": "https",
+							"host": [
+								"serverest",
+								"dev"
+							],
+							"path": [
+								"usuarios",
+								"{{usuario_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EXCLUIR_USUARIOS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validar resposta - Sucesso.\", function () {\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"    pm.expect(response.message).to.equal(\"Registro excluído com sucesso\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://serverest.dev/usuarios/{{usuario_id}}",
+							"protocol": "https",
+							"host": [
+								"serverest",
+								"dev"
+							],
+							"path": [
+								"usuarios",
+								"{{usuario_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRAR_USUARIO - SUCESSO 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validar status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});    \r",
+									"\r",
+									"pm.test(\"Validar menssagem response.\", function () {\r",
+									"    pm.expect(response.message).to.be.a(\"string\")\r",
+									"    pm.expect(response.message).to.equal(\"Cadastro realizado com sucesso\")\r",
+									"    pm.expect(response._id).to.be.a(\"string\")\r",
+									"    pm.environment.set(\"usuario_id\", response._id);\r",
+									"});\r",
+									"\r",
+									"console.log(\"ID usado na requisição:\", pm.environment.get(\"usuario_id\"));\r",
+									"\r",
+									"   "
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera um nome aleatório\r",
+									"const nomes = [\"Lucas\", \"Mariana\", \"Thiago\", \"Camila\"];\r",
+									"const sobrenomes = [\"Santos\", \"Rocha\", \"Lima\", \"Costa\"];\r",
+									"\r",
+									"const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)] + \" \" +\r",
+									"                      sobrenomes[Math.floor(Math.random() * sobrenomes.length)];\r",
+									"\r",
+									"// Gera email aleatório\r",
+									"const emailAleatorio = `teste${Math.floor(Math.random() * 10000)}@exemplo.com.br`;\r",
+									"\r",
+									"// Gera senha aleatória simples\r",
+									"const senhaAleatoria = `Senha${Math.floor(Math.random() * 10000)}!`;\r",
+									"\r",
+									"// Salva em variáveis de environment ou collection\r",
+									"pm.environment.set(\"nome_aleatorio\", nomeAleatorio);\r",
+									"pm.environment.set(\"email_aleatorio\", emailAleatorio);\r",
+									"pm.environment.set(\"senha_aleatoria\", senhaAleatoria);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nome_aleatorio}}\",\r\n  \"email\": \"{{email_aleatorio}}\",\r\n  \"password\": \"{{senha_aleatoria}}\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://serverest.dev/usuarios",
+							"protocol": "https",
+							"host": [
+								"serverest",
+								"dev"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ATUALIZAR_USUARIO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"usuario_id\", response._id);\r",
+									"\r",
+									"    pm.test(\"Validar status code is 200 e mensagem de retorno.\", function () {\r",
+									"        pm.response.to.have.status(200);\r",
+									"        pm.expect(response.message).to.be.a(\"string\");\r",
+									"        pm.expect(response.message).to.equal(\"Registro alterado com sucesso\");\r",
+									"\r",
+									"        pm.environment.set(\"usuario_id\", response._id);\r",
+									"        console.log(\"ID ATT: \" + pm.environment.get(\"usuario_id\"));\r",
+									"    });\r",
+									"\r",
+									"    \r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera um nome aleatório\r",
+									"const nomes = [\"Lucas\", \"Mariana\", \"Thiago\", \"Camila\"];\r",
+									"const sobrenomes = [\"Santos\", \"Rocha\", \"Lima\", \"Costa\"];\r",
+									"\r",
+									"const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)] + \" \" +\r",
+									"                      sobrenomes[Math.floor(Math.random() * sobrenomes.length)];\r",
+									"\r",
+									"// Gera email aleatório\r",
+									"const emailAleatorio = `teste${Math.floor(Math.random() * 10000)}@exemplo.com.br`;\r",
+									"\r",
+									"// Gera senha aleatória simples\r",
+									"const senhaAleatoria = `Senha${Math.floor(Math.random() * 10000)}!`;\r",
+									"\r",
+									"// Salva em variáveis de environment ou collection\r",
+									"pm.environment.set(\"nome_aleatorio\", nomeAleatorio);\r",
+									"pm.environment.set(\"email_aleatorio\", emailAleatorio);\r",
+									"pm.environment.set(\"senha_aleatoria\", senhaAleatoria);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "_id",
+								"value": "{{usuario_id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nome_aleatorio}}\",\r\n  \"email\": \"{{email_aleatorio}}\",\r\n  \"password\": \"{{senha_aleatoria}}\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://serverest.dev/usuarios/{{usuario_id}}",
+							"protocol": "https",
+							"host": [
+								"serverest",
+								"dev"
+							],
+							"path": [
+								"usuarios",
+								"{{usuario_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RECUPERAR_TODOS_USUARIOS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"\r",
+									"var campos = [\"nome\", \"email\", \"password\", \"administrador\"]\r",
+									"\r",
+									"    pm.test(\"Validar status code is 200 e campos válidos.\", function () {\r",
+									"       pm.response.to.have.status(200);\r",
+									"\r",
+									"       campos.forEach(campos => {\r",
+									"            var valor = response.usuarios[campos];\r",
+									"            pm.expect(valor + \" Valor deve ser tipo string.\").to.be.a(\"string\")\r",
+									"            pm.expect(valor + \"Valor não pode ser indefinido.\").to.not.be.undefined;\r",
+									"            pm.expect(valor + \"Valor não pode ser nulo.\").to.not.be.null;\r",
+									"            pm.expect(valor + \"Valor não pode ser vazio.\").to.not.be.empty;\r",
+									"       }); \r",
+									"    });\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://serverest.dev/usuarios",
+							"protocol": "https",
+							"host": [
+								"serverest",
+								"dev"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
