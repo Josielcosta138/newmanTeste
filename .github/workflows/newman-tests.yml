@@ -2,14 +2,17 @@ name: Newman API Tests
 
 on:
   schedule:
-    - cron: "9 0 * * 2-6"
-  workflow_dispatch: # permite rodar manualmente também
+    - cron: "0 * * * *"
+  workflow_dispatch:
 
 jobs:
   run-api-tests:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 🕒 Verificar execução
+        run: echo "Executando via cron às $(date)"
+
       - name: 📥 Clonar repositório
         uses: actions/checkout@v4
 
