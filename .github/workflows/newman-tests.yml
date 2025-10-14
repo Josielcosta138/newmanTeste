@@ -2,8 +2,7 @@ name: Newman API Tests
 
 on:
   schedule:
-    # Segunda a sexta às 20:45 (horário UTC — veja observação abaixo)
-    - cron: "55 23 * * 1-5"
+    - cron: "1 0 * * 2-6"
   workflow_dispatch: # permite rodar manualmente também
 
 jobs:
