@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: relatorio-newman
-          path: newman-report.html
+          path: relatorio.html
