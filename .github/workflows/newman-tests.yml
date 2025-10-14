@@ -2,7 +2,7 @@ name: Newman API Tests
 
 on:
   schedule:
-    - cron: "6 0 * * 2-6"
+    - cron: "9 0 * * 2-6"
   workflow_dispatch: # permite rodar manualmente também
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
         run: |
           newman run "TESTE_NEWMAN.postman_collection.json" \
           -e "ENV_SERVER_REST_CT.postman_environment.json" \
-          -r "cli,htmlextra" 
+          -r "cli,htmlextra" \
           --reporter-htmlextra-export "relatorio.html"
 
       - name: 📤 Fazer upload do relatório HTML
