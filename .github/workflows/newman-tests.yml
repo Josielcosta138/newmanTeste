@@ -2,7 +2,7 @@ name: Newman API Tests
 
 on:
   schedule:
-    - cron: "1 0 * * 2-6"
+    - cron: "6 0 * * 2-6"
   workflow_dispatch: # permite rodar manualmente também
 
 jobs:
